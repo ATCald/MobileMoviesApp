@@ -6,7 +6,7 @@ import { fetchMovies } from "@/services/api";
 import useFetch from "@/services/useFetch";
 import { useRouter } from "expo-router";
 import { ActivityIndicator, FlatList, Image, ScrollView, Text, View } from "react-native";
-
+import React = require("react");
 export default function Index() {
   const router = useRouter();
 
