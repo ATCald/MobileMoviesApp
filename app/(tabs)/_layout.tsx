@@ -2,6 +2,7 @@ import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 import { Tabs } from "expo-router";
 import { Image, ImageBackground, Text, View } from "react-native";
+import React = require("react");
 
 
 // this is where the dynamic tabs come into play*
