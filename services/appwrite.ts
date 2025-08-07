@@ -13,26 +13,26 @@ const database = new Databases(client);
 
 export const updateSearchCount = async (query: string, movie: Movie) => {
   try {
-    console.log("🔍 Searching for existing term:", query);
+    console.log("Searching for existing term:", query);
     const result = await database.listDocuments(
       DATABASE_ID,
       COLLECTION_ID,
       [ Query.equal("searchTerm", query) ]
     );
-    console.log("📄 listDocuments result:", result.documents);
+    console.log("listDocuments result:", result.documents);
 
     if (result.documents.length > 0) {
       const existing = result.documents[0];
-      console.log("✏️  Updating document", existing.$id);
+      console.log("Updating document", existing.$id);
       const updated = await database.updateDocument(
         DATABASE_ID,
         COLLECTION_ID,
         existing.$id,
         { count: existing.count + 1 }
       );
-      console.log("✅ updateDocument response:", updated);
+      console.log("updateDocument response:", updated);
     } else {
-      console.log("➕ Creating new document for term:", query);
+      console.log("Creating new document for term:", query);
       const created = await database.createDocument(
         DATABASE_ID,
         COLLECTION_ID,
@@ -45,10 +45,10 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
           poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
         }
       );
-      console.log("✅ createDocument response:", created);
+      console.log("createDocument response:", created);
     }
   } catch (err) {
-    console.error("❌ Appwrite error:", err);
+    console.error("Appwrite error:", err);
     throw err;
   }
 };

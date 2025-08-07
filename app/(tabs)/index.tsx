@@ -24,7 +24,7 @@ export default function Index() {
     data: movies,
     loading: moviesLoading,
     error: moviesError,
-  } = useFetch(() => fetchMovies({ query: "" }));
+  } = useFetch(() => fetchMovies({ query : "" }));
 
   return (
     <View className="flex-1 bg-primary">
@@ -34,7 +34,7 @@ export default function Index() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
       >
-        <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto" />
+        <Image source={icons.hd} className="w-12 h-10 mt-20 mb-5 mx-auto" />
 
         {moviesLoading || trendingError ? (
           <ActivityIndicator
