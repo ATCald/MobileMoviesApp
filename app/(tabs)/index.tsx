@@ -1,75 +1,77 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import MovieCard from '@/components/MovieCard'
+import SearchBar from '@/components/SearchBar'
+import { icons } from '@/constants/icons'
+import { images } from '@/constants/images'
+import { fetchMovies } from '@/services/api'
+import { useRouter } from 'expo-router'
+import React, { useEffect, useState } from 'react'
+import { FlatList, Image, ImageBackground, ScrollView, Text, View } from 'react-native'
+import '../globals.css'
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const index = () => {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [movies, setMovies] = useState<Movie[]>([])
 
-export default function HomeScreen() {
+  useEffect(() => {
+    const loadMovies = async () => {
+      try {
+        setLoading(true)
+        const data = await fetchMovies()
+        setMovies(data)
+      } catch (e) {
+        console.log(e)
+      } finally{
+        setLoading(false)
+      }
+    }
+
+    loadMovies();
+  },[])
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <ImageBackground
+        source={images.purpleBg}
+        resizeMode='cover'
+        className='flex flex-1'
+    >
+      <ScrollView 
+        className='w-full'        
+        showsVerticalScrollIndicator={false}
+      >
+        <Image 
+          source={icons.logo}
+          className='size-12 mt-20 mx-auto'
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+        <View className='flex-1 mt-5 px-5'>
+          <SearchBar searchQuery={searchQuery} onChangeText={(text: string) => setSearchQuery(text)} onSubmitEditing={() => router.push(`/search?query=${encodeURIComponent(searchQuery)}`)}/>
+        </View>
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+        <Text className='text-white font-bold text-lg ml-3 mt-5'>Latest Movies</Text>
+
+        <FlatList
+          data={movies}
+          numColumns={3}
+          renderItem={({ item }) => (
+            <MovieCard movie={item} />
+          )}
+          keyExtractor={item => item.id.toString()}
+          className='mt-5 pb-32 '
+          contentContainerStyle={{
+            justifyContent: 'flex-start',
+            gap: 20,
+            marginBottom: 10,
+          }}
+          scrollEnabled={false}
+        />
+      </ScrollView>
+
+    </ImageBackground>
+  )
+}
+// Logo, searchbar.
+// somhow get the searchquery into search.tsx file and render the 
+
+export default index
