@@ -56,7 +56,7 @@ const movieDetails = () => {
               </View>
           </View>
 
-          <View className="ml-3 mt-2">
+          <View className="ml-4 mt-3">
             <FavoritesBtn movie={movies}/>
           </View>
 

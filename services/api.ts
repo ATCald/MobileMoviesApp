@@ -4,17 +4,30 @@
 const API_KEY = '4cf945626c0851dea413b7f7abc74320'
 const BASE_URL = 'https://api.themoviedb.org/3'
 
+interface MovieResponse {
+  results: Movie[],
+  pageNumber: number,
+  totalPages: number,
+}
 
-export const fetchMovies = async () => {
+export const fetchMovies = async (page: number = 1): Promise<MovieResponse>=> {
   try {
-    const response = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
+    const response = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&page=${page}`)
     if (!response.ok) throw new Error('Network response was not ok');
     const data = await response.json();
-    return data.results
+    return {
+      results: data.results,
+      pageNumber: data.page,
+      totalPages: data.total_pages,
+    }
 
   } catch (err) {
     console.error('Fetch failed', err);
-    return [];
+    return {
+      results: [],
+      pageNumber: page,
+      totalPages: 0,
+    }
   }
 };
 
@@ -33,8 +46,6 @@ export const fetchMoviesBySearch = async (searchTerm: string) => {
 export const fetchMoviesById = async (id: string) => {
   try {
     const response = await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`)
-    console.log("Attempting to fetch id")
-        console.log(id)
     if (!response.ok) {
       throw new Error("Failed to fetch using Id")
     }
@@ -45,5 +56,3 @@ export const fetchMoviesById = async (id: string) => {
     console.error(err)
   }
 }
-
-// we have the data i just need to figure out how to display it...

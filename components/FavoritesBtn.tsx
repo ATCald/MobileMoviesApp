@@ -9,12 +9,12 @@ const FavoritesBtn = ({movie}: {movie: Movie}) => {
     const isFavorites = favorites.some(fav => fav.id === movie.id)
 
   return (
-    <TouchableOpacity className='w-12 h-12 justify-center items-center bg-[#221f3d] rounded-full '
+    <TouchableOpacity className='w-8 h-8 justify-center items-center bg-[#221f3d] rounded-full '
         onPress={() => toggleBtn(movie)}
     >
         <Image 
             source={isFavorites? icons.full_heart: icons.heart}
-            tintColor='white'
+            tintColor={isFavorites? 'red' : 'white'}
         />
     </TouchableOpacity>
   )
